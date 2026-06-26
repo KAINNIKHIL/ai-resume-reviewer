@@ -26,13 +26,28 @@ Analyze the following resume.
 
 Return ONLY valid JSON in this format:
 
+Return ONLY valid JSON:
+
 {
   "score": 0,
+  "remark": "",
   "strengths": [],
   "weaknesses": [],
   "missingSkills": [],
   "suggestions": []
 }
+  Remark Guidelines:
+90-100: Excellent Resume - Ready for top-tier applications
+80-89: Strong Resume - Minor improvements needed
+70-79: Good Resume - Some optimization recommended
+60-69: Average Resume - Needs improvement
+0-59: Needs Significant Work
+
+Each suggestion must be one concise sentence.
+Do not use markdown.
+Do not use **bold**.
+Do not use labels followed by colons.
+Return plain text only.
 
 Resume:
 
@@ -55,8 +70,35 @@ let analysis;
 
 try {
   analysis = JSON.parse(cleanedText);
+  console.log("Parsed Analysis:");
+console.log(analysis);
+  await prisma.analysis.upsert({
+  where: {
+    resumeId: resume.id,
+  },
+  update: {
+    score: analysis.score,
+    remark: analysis.remark,
+    strengths: analysis.strengths,
+    weaknesses: analysis.weaknesses,
+    missingSkills: analysis.missingSkills,
+    suggestions: analysis.suggestions,
+  },
+  create: {
+    score: analysis.score,
+    remark: analysis.remark,
+    strengths: analysis.strengths,
+    weaknesses: analysis.weaknesses,
+    missingSkills: analysis.missingSkills,
+    suggestions: analysis.suggestions,
+    resumeId: resume.id,
+  },
+});
+
 } catch (error) {
-  console.error("JSON Parse Error:", cleanedText);
+  console.error("JSON Parse Error");
+  console.error(error);
+  console.error(cleanedText);
 
   return NextResponse.json(
     {

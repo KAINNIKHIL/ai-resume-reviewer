@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { useRouter } from "next/navigation";
 import {
   UploadCloud,
   FileText,
@@ -9,20 +10,11 @@ import {
   Sparkles,
 } from "lucide-react";
 
-interface ResumeAnalysis {
-  score: number;
-  strengths: string[];
-  weaknesses: string[];
-  missingSkills: string[];
-  suggestions: string[];
-}
-
 export default function ResumeUpload() {
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [analysis, setAnalysis] =
-    useState<ResumeAnalysis | null>(null);
+  const router = useRouter();
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const uploadedFile = acceptedFiles[0];
@@ -40,7 +32,6 @@ export default function ResumeUpload() {
     }
 
     setFile(uploadedFile);
-    setAnalysis(null);
   }, []);
 
   const handleAnalyze = async () => {
@@ -52,6 +43,7 @@ export default function ResumeUpload() {
     try {
       setIsLoading(true);
 
+      // Upload Resume
       const formData = new FormData();
       formData.append("resume", file);
 
@@ -68,6 +60,7 @@ export default function ResumeUpload() {
         );
       }
 
+      // Analyze Resume
       const analyzeResponse = await fetch(
         "/api/resume/analyze",
         {
@@ -81,9 +74,8 @@ export default function ResumeUpload() {
         }
       );
 
-      const analysisData = await analyzeResponse.json();
-
-      console.log("Analysis:", analysisData);
+      const analysisData =
+        await analyzeResponse.json();
 
       if (!analyzeResponse.ok) {
         throw new Error(
@@ -91,7 +83,10 @@ export default function ResumeUpload() {
         );
       }
 
-      setAnalysis(analysisData.analysis);
+      // Redirect to detail page
+      router.push(
+        `/dashboard/resumes/${uploadData.resume.id}`
+      );
     } catch (error) {
       console.error(error);
 
@@ -119,7 +114,6 @@ export default function ResumeUpload() {
 
   return (
     <div className="space-y-6">
-      {/* Upload Area */}
       <div
         {...getRootProps()}
         className={`border-2 border-dashed rounded-3xl p-12 text-center cursor-pointer transition-all
@@ -166,7 +160,6 @@ export default function ResumeUpload() {
         )}
       </div>
 
-      {/* Analyze Button */}
       <button
         onClick={handleAnalyze}
         disabled={!file || isLoading}
@@ -187,130 +180,6 @@ export default function ResumeUpload() {
           </>
         )}
       </button>
-
-      {/* Results */}
-  {analysis && (
-  <div className="max-w-5xl mx-auto mt-10 space-y-8">
-
-    {/* SCORE HEADER */}
-    <div className="rounded-3xl p-6 bg-gradient-to-r from-gray-900 to-gray-700 text-white flex items-center justify-between">
-      <div>
-        <p className="text-sm opacity-70">ATS SCORE</p>
-        <h1 className="text-5xl font-bold">
-          {analysis.score}/100
-        </h1>
-
-        <p className="mt-2 text-sm opacity-80">
-          {analysis.score >= 80
-            ? "Strong Resume 🚀"
-            : analysis.score >= 60
-            ? "Good but improve ⚡"
-            : "Needs Work 🧱"}
-        </p>
-      </div>
-
-      <div className="text-6xl">
-        {analysis.score >= 80
-          ? "🔥"
-          : analysis.score >= 60
-          ? "⚡"
-          : "🚧"}
-      </div>
-    </div>
-
-    {/* GRID */}
-    <div className="grid md:grid-cols-2 gap-6">
-
-      {/* STRENGTHS */}
-      <div className="bg-white border rounded-2xl p-5 shadow-sm">
-        <h2 className="text-lg font-semibold mb-3 text-green-600">
-          💪 Strengths
-        </h2>
-
-        <div className="space-y-3">
-  {analysis.suggestions.map((item, i) => (
-    <div
-      key={i}
-      className="border rounded-xl p-4 bg-blue-50 hover:shadow-md transition"
-    >
-      <div className="font-semibold text-blue-700">
-        💪 Strength+
-      </div>
-      <div className="text-sm text-blue-800 mt-1">
-        {item}
-      </div>
-    </div>
-  ))}
-</div>
-      </div>
-
-      {/* WEAKNESSES */}
-      <div className="bg-white border rounded-2xl p-5 shadow-sm">
-        <h2 className="text-lg font-semibold mb-3 text-red-600">
-          ⚠ Weaknesses
-        </h2>
-
-        <div className="space-y-3">
-  {analysis.weaknesses.map((item, i) => (
-    <div
-      key={i}
-      className="border rounded-xl p-4 bg-red-50 hover:shadow-md transition"
-    >
-      <div className="font-semibold text-red-700">
-        ⚠ Issue {i + 1}
-      </div>
-      <div className="text-sm text-red-800 mt-1">
-        {item}
-      </div>
-    </div>
-  ))}
-</div>
-      </div>
-
-      {/* MISSING SKILLS */}
-      <div className="bg-white border rounded-2xl p-5 shadow-sm">
-        <h2 className="text-lg font-semibold mb-3 text-yellow-600">
-          🧠 Missing Skills
-        </h2>
-
-        <div className="flex flex-wrap gap-2">
-          {analysis.missingSkills.map((item, i) => (
-            <span
-              key={i}
-              className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm"
-            >
-              {item}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* SUGGESTIONS */}
-      <div className="bg-white border rounded-2xl p-5 shadow-sm">
-        <h2 className="text-lg font-semibold mb-3 text-blue-600">
-          💡 Suggestions
-        </h2>
-
-        <div className="space-y-3">
-  {analysis.suggestions.map((item, i) => (
-    <div
-      key={i}
-      className="border rounded-xl p-4 bg-blue-50 hover:shadow-md transition"
-    >
-      <div className="font-semibold text-blue-700">
-        💡 Action Step
-      </div>
-      <div className="text-sm text-blue-800 mt-1">
-        {item}
-      </div>
-    </div>
-  ))}
-</div>
-      </div>
-
-    </div>
-  </div>
-)}
     </div>
   );
 }
