@@ -132,25 +132,25 @@ export default async function ResumesPage() {
         ) : (
           <div className="space-y-3">
   {resumes.map((resume) => (
-    <Link
+    <div
       key={resume.id}
-      href={`/dashboard/resumes/${resume.id}`}
-      className="block"
+      className="border rounded-xl p-4 hover:shadow-md transition"
     >
-      <div className="border rounded-xl p-4 hover:shadow-md transition">
-        <div className="flex justify-between items-start">
-          <div>
-            <h3 className="font-semibold text-lg">
-              {resume.title}
-            </h3>
+      <div className="flex justify-between items-start gap-4">
+        <Link
+          href={`/dashboard/resumes/${resume.id}`}
+          className="flex-1"
+        >
+          <h3 className="font-semibold text-lg">
+            {resume.title}
+          </h3>
 
-            <p className="text-sm text-muted-foreground">
-              {resume.createdAt.toLocaleString()}
-            </p>
-          </div>
+          <p className="text-sm text-muted-foreground">
+            {resume.createdAt.toLocaleString()}
+          </p>
 
           {resume.analysis && (
-            <div className="text-right">
+            <div className="mt-3">
               <p className="text-2xl font-bold">
                 {resume.analysis.score}/100
               </p>
@@ -160,9 +160,30 @@ export default async function ResumesPage() {
               </p>
             </div>
           )}
-        </div>
+        </Link>
+
+        <form
+          action={async () => {
+            "use server";
+
+            await prisma.resume.delete({
+              where: {
+                id: resume.id,
+              },
+            });
+
+            redirect("/dashboard/resumes");
+          }}
+        >
+          <button
+            type="submit"
+            className="rounded-lg bg-red-500 px-4 py-2 text-white hover:bg-red-600"
+          >
+            Delete
+          </button>
+        </form>
       </div>
-    </Link>
+    </div>
   ))}
 </div>
         )}

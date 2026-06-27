@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import Link from "next/link";
 
 export default async function ResumeDetailsPage({
   params,
@@ -22,6 +23,12 @@ export default async function ResumeDetailsPage({
 
   return (
   <div className="max-w-5xl mx-auto space-y-8">
+    <Link
+  href={`/dashboard/resumes/${resume.id}/compare`}
+  className="inline-flex items-center rounded-lg bg-black px-4 py-2 text-white"
+>
+  Compare with Job Description
+</Link>
     <div>
       <h1 className="text-3xl font-bold">
         {resume.title}

@@ -29,6 +29,7 @@ model Resume {
   fileUrl       String
   extractedText String?
   analysis      Analysis?
+  jobMatches JobMatch[]
   userId        String
   user          User     @relation(fields: [userId], references: [id])
 
@@ -82,6 +83,25 @@ model Analysis {
 
   resumeId String @unique
   resume   Resume @relation(fields: [resumeId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model JobMatch {
+  id               String   @id @default(cuid())
+
+  jobDescription   String
+
+  matchScore       Int
+
+  matchedSkills    Json
+
+  missingKeywords  Json
+
+  suggestions      Json
+
+  resumeId         String
+  resume           Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 }
