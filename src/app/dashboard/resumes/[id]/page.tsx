@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import OptimizeButton from "@/components/resume/optimize-button";
 
 export default async function ResumeDetailsPage({
   params,
@@ -42,6 +43,19 @@ export default async function ResumeDetailsPage({
         {resume.analysis?.remark || "No remark"}
       </p>
     </div>
+
+    <div className="flex gap-4">
+  <Link
+    href={`/dashboard/compare`}
+    className="px-6 py-3 rounded-xl border"
+  >
+    Compare with JD
+  </Link>
+
+  <OptimizeButton
+    resumeId={resume.id}
+  />
+</div>
 
     <div className="grid md:grid-cols-2 gap-6">
 

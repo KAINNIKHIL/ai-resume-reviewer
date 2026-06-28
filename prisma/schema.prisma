@@ -32,6 +32,7 @@ model Resume {
   jobMatches JobMatch[]
   userId        String
   user          User     @relation(fields: [userId], references: [id])
+  optimization ResumeOptimization?
 
   createdAt     DateTime @default(now())
 }
@@ -102,6 +103,28 @@ model JobMatch {
 
   resumeId         String
   resume           Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
+
+model ResumeOptimization {
+  id String @id @default(cuid())
+
+  originalSummary String?
+  optimizedSummary String?
+
+  originalExperience Json?
+  optimizedExperience Json?
+
+  originalSkills Json?
+  optimizedSkills Json?
+
+  optimizedResume String
+
+  aiSummary Json?
+
+  resumeId String @unique
+  resume Resume @relation(fields: [resumeId], references: [id])
 
   createdAt DateTime @default(now())
 }
