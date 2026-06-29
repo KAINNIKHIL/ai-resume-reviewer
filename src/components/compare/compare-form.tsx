@@ -137,16 +137,12 @@ export default function CompareForm({
             ) : (
               resumes.map((resume) => (
                 <ResumeCard
-                  key={resume.id}
-                  resume={resume}
-                  loading={
-                    loadingResumeId ===
-                    resume.id
-                  }
-                  onCompare={() =>
-                    handleCompare(resume.id)
-                  }
-                />
+  key={resume.id}
+  resume={resume}
+  loading={loadingResumeId === resume.id}
+  onCompare={() => handleCompare(resume.id)}
+  buttonText="Analyze Match"
+/>
               ))
             )}
 

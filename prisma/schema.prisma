@@ -33,6 +33,7 @@ model Resume {
   userId        String
   user          User     @relation(fields: [userId], references: [id])
   optimization ResumeOptimization?
+  coverLetters CoverLetter[]
 
   createdAt     DateTime @default(now())
 }
@@ -125,6 +126,22 @@ model ResumeOptimization {
 
   resumeId String @unique
   resume Resume @relation(fields: [resumeId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model CoverLetter {
+  id          String   @id @default(cuid())
+
+  companyName String?
+  jobTitle    String?
+
+  jobDescription String
+
+  content String
+
+  resumeId String
+  resume Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 }

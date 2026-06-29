@@ -15,12 +15,14 @@ interface Props {
   resume: Resume;
   loading: boolean;
   onCompare: () => void;
+  buttonText?: string;
 }
 
 export default function ResumeCard({
   resume,
   loading,
   onCompare,
+  buttonText = "Compare",
 }: Props) {
   const score = resume.analysis?.score ?? 0;
 
@@ -82,41 +84,19 @@ export default function ResumeCard({
 
         {/* Compare Button */}
         <button
-          onClick={onCompare}
-          disabled={loading}
-          className="
-            flex
-            w-full
-            items-center
-            justify-center
-            gap-2
-            rounded-xl
-            bg-gradient-to-r
-            from-indigo-600
-            to-violet-600
-            px-6
-            py-3
-            font-medium
-            text-white
-            transition
-            hover:opacity-90
-            disabled:cursor-not-allowed
-            disabled:opacity-60
-            sm:w-auto
-          "
-        >
-          {loading ? (
-            <>
-              <Loader2
-                size={18}
-                className="animate-spin"
-              />
-              Comparing...
-            </>
-          ) : (
-            "Compare"
-          )}
-        </button>
+  onClick={onCompare}
+  disabled={loading}
+  className="..."
+>
+  {loading ? (
+    <>
+      <Loader2 className="animate-spin h-4 w-4" />
+      Processing...
+    </>
+  ) : (
+    buttonText
+  )}
+</button>
 
       </div>
     </div>
