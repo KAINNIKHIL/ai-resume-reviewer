@@ -3,6 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import {
+  Sparkles,
+  ArrowRight,
+  CheckCircle2,
+} from "lucide-react";
 
 import ResumeCard from "./resume-card";
 import JobDescriptionCard from "./job-description-card";
@@ -11,7 +16,6 @@ interface JobMatch {
   id: string;
   matchScore: number;
   createdAt: Date;
-
   resume: {
     title: string;
   };
@@ -40,19 +44,25 @@ export default function CompareForm({
   const [jobDescription, setJobDescription] =
     useState("");
 
-  const [loadingResumeId, setLoadingResumeId] =
+  const [selectedResume, setSelectedResume] =
     useState<string | null>(null);
 
-  async function handleCompare(
-    resumeId: string
-  ) {
+  const [loading, setLoading] =
+    useState(false);
+
+  async function handleCompare() {
+    if (!selectedResume) {
+      alert("Select a resume first.");
+      return;
+    }
+
     if (!jobDescription.trim()) {
       alert("Paste a Job Description first.");
       return;
     }
 
     try {
-      setLoadingResumeId(resumeId);
+      setLoading(true);
 
       const response = await fetch(
         "/api/resume/job-match",
@@ -63,7 +73,7 @@ export default function CompareForm({
               "application/json",
           },
           body: JSON.stringify({
-            resumeId,
+            resumeId: selectedResume,
             jobDescription,
           }),
         }
@@ -78,145 +88,244 @@ export default function CompareForm({
       }
 
       router.push(`/dashboard/compare/${data.id}`);
-    } catch (error) {
+    } catch (err) {
       alert(
-        error instanceof Error
-          ? error.message
+        err instanceof Error
+          ? err.message
           : "Something went wrong"
       );
     } finally {
-      setLoadingResumeId(null);
+      setLoading(false);
     }
   }
 
   return (
-    <div>
+    <div className="space-y-10">
 
-      
+      {/* Hero */}
 
-      <div className="grid lg:grid-cols-5 gap-8">
+      <div className="rounded-3xl border bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-8">
 
-        {/* Left */}
+        <div className="flex items-center gap-3">
 
-        <div className="lg:col-span-3">
-          <JobDescriptionCard
-            value={jobDescription}
-            onChange={setJobDescription}
-          />
-        </div>
-
-        {/* Right */}
-
-        <div className="lg:col-span-2">
-
-          <div className="flex justify-between items-center mb-5">
-
-            <h2 className="text-2xl font-bold">
-              Your Resumes
-            </h2>
-
-            <span className="text-sm text-muted-foreground">
-              {resumes.length} total
-            </span>
-
+          <div className="rounded-2xl bg-blue-600 p-3 text-white">
+            <Sparkles size={24} />
           </div>
 
-          <div className="space-y-4">
+          <div>
+            <h1 className="text-3xl font-bold">
+              AI Job Match
+            </h1>
 
-            {resumes.length === 0 ? (
-              <div className="rounded-2xl border border-dashed p-10 text-center">
-                <p className="font-semibold">
-                  No resumes uploaded
-                </p>
-
-                <p className="text-sm text-muted-foreground mt-2">
-                  Upload a resume before using AI
-                  Job Match.
-                </p>
-              </div>
-            ) : (
-              resumes.map((resume) => (
-                <ResumeCard
-  key={resume.id}
-  resume={resume}
-  loading={loadingResumeId === resume.id}
-  onCompare={() => handleCompare(resume.id)}
-  buttonText="Analyze Match"
-/>
-              ))
-            )}
-
+            <p className="text-zinc-600 mt-2">
+              Compare your resume with any Job
+              Description and discover missing
+              keywords, ATS compatibility and AI
+              suggestions.
+            </p>
           </div>
 
         </div>
 
       </div>
 
-      {/* Compare History */}
+      {/* Main Grid */}
 
-<div className="mt-12">
+      <div className="grid lg:grid-cols-5 gap-8">
 
-  <div className="flex justify-between items-center mb-5">
-    <h2 className="text-2xl font-bold">
-      Recent Comparisons
-    </h2>
+        {/* LEFT */}
 
-    <span className="text-sm text-muted-foreground">
-      {jobMatches.length} total
-    </span>
-  </div>
+        <div className="lg:col-span-3">
 
-  {jobMatches.length === 0 ? (
-    <div className="rounded-2xl border border-dashed p-10 text-center">
-      <p className="font-semibold">
-        No comparisons yet
-      </p>
+          <JobDescriptionCard
+            value={jobDescription}
+            onChange={setJobDescription}
+          />
 
-      <p className="text-sm text-muted-foreground mt-2">
-        Compare a resume with a Job Description to
-        see history here.
-      </p>
-    </div>
-  ) : (
-    <div className="grid md:grid-cols-2 gap-4">
+        </div>
 
-      {jobMatches.map((match) => (
-        <Link
-          key={match.id}
-          href={`/dashboard/compare/${match.id}`}
-        >
-          <div className="border rounded-2xl p-5 hover:shadow-md transition cursor-pointer">
+        {/* RIGHT */}
 
-            <h3 className="font-semibold text-lg">
-              {match.resume.title}
-            </h3>
+        <div className="lg:col-span-2">
 
-            <p className="text-sm text-muted-foreground mt-1">
-              {new Date(
-                match.createdAt
-              ).toLocaleString()}
-            </p>
+          <div className="flex justify-between items-center mb-6">
 
-            <div className="mt-4 flex justify-between items-center">
+            <div>
 
-              <span className="text-sm text-muted-foreground">
-                Match Score
-              </span>
+              <h2 className="text-2xl font-bold">
+                Select Resume
+              </h2>
 
-              <span className="text-2xl font-bold">
-                {match.matchScore}%
-              </span>
+              <p className="text-sm text-zinc-500">
+                Choose one resume
+              </p>
 
             </div>
 
+            <span className="rounded-full bg-zinc-100 px-3 py-1 text-sm">
+              {resumes.length}
+            </span>
+
           </div>
-        </Link>
-      ))}
 
-    </div>
-  )}
+          <div className="space-y-4">
 
-</div>
+            {resumes.map((resume) => (
+
+              <div
+                key={resume.id}
+                onClick={() =>
+                  setSelectedResume(resume.id)
+                }
+                className={`cursor-pointer rounded-3xl transition
+                ${
+                  selectedResume === resume.id
+                    ? "ring-2 ring-blue-500"
+                    : ""
+                }`}
+              >
+
+                <ResumeCard
+                  resume={resume}
+                  loading={false}
+                  buttonText="Selected"
+                  onCompare={() => {}}
+                />
+
+              </div>
+
+            ))}
+
+          </div>
+
+          {/* Button */}
+
+          <button
+            disabled={
+              !selectedResume || loading
+            }
+            onClick={handleCompare}
+            className="
+            mt-6
+            w-full
+            rounded-2xl
+            bg-blue-600
+            py-4
+            text-white
+            font-semibold
+            transition
+            hover:bg-blue-700
+            disabled:opacity-50
+            flex
+            justify-center
+            items-center
+            gap-2
+          "
+          >
+            {loading ? (
+              "Analyzing..."
+            ) : (
+              <>
+                Analyze Match
+                <ArrowRight size={18} />
+              </>
+            )}
+          </button>
+
+        </div>
+
+      </div>
+
+      {/* History */}
+
+      <div>
+
+        <div className="flex justify-between mb-6">
+
+          <h2 className="text-2xl font-bold">
+            Recent Comparisons
+          </h2>
+
+          <span className="text-zinc-500">
+            {jobMatches.length}
+          </span>
+
+        </div>
+
+        {jobMatches.length === 0 ? (
+
+          <div className="rounded-3xl border border-dashed p-12 text-center">
+
+            <CheckCircle2
+              className="mx-auto text-zinc-400"
+              size={40}
+            />
+
+            <h3 className="mt-4 text-lg font-semibold">
+              No comparisons yet
+            </h3>
+
+            <p className="text-zinc-500 mt-2">
+              Analyze your first resume to see
+              history here.
+            </p>
+
+          </div>
+
+        ) : (
+
+          <div className="grid gap-4">
+
+            {jobMatches.map((match) => (
+
+              <Link
+                key={match.id}
+                href={`/dashboard/compare/${match.id}`}
+              >
+
+                <div className="rounded-3xl border p-6 hover:shadow-lg transition">
+
+                  <div className="flex justify-between items-center">
+
+                    <div>
+
+                      <h3 className="font-semibold text-lg">
+                        {match.resume.title}
+                      </h3>
+
+                      <p className="text-sm text-zinc-500 mt-1">
+                        {new Date(
+                          match.createdAt
+                        ).toLocaleString()}
+                      </p>
+
+                    </div>
+
+                    <div className="text-right">
+
+                      <div className="text-3xl font-bold text-blue-600">
+                        {match.matchScore}%
+                      </div>
+
+                      <p className="text-xs text-zinc-500">
+                        ATS Match
+                      </p>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </Link>
+
+            ))}
+
+          </div>
+
+        )}
+
+      </div>
 
     </div>
   );

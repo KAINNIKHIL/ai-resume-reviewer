@@ -2,6 +2,7 @@ import { auth } from "@/app/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import CompareForm from "@/components/compare/compare-form";
+import { GitCompare, Sparkles, ShieldCheck, FileText } from "lucide-react";
 
 export default async function ComparePage() {
   const session = await auth();
@@ -19,7 +20,6 @@ export default async function ComparePage() {
   if (!user) {
     redirect("/");
   }
-  
 
   const resumes = await prisma.resume.findMany({
     where: {
@@ -34,78 +34,83 @@ export default async function ComparePage() {
   });
 
   const jobMatches = await prisma.jobMatch.findMany({
-  where: {
-    resume: {
-      userId: user.id,
+    where: {
+      resume: {
+        userId: user.id,
+      },
     },
-  },
-  include: {
-    resume: true,
-  },
-  orderBy: {
-    createdAt: "desc",
-  },
-});
+    include: {
+      resume: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-10 space-y-10">
+    
+    <div className="mx-auto max-w-7xl px-4 py-10 md:px-6 space-y-16">
+      
       {/* Hero Section */}
-      <section className="overflow-hidden rounded-3xl border bg-gradient-to-r from-slate-900 via-slate-800 to-slate-700 text-white">
-        <div className="p-10">
+      <section className="overflow-hidden rounded-3xl border bg-gradient-to-br from-slate-900 via-slate-850 to-slate-800 text-white shadow-sm">
+        
+        <div className="p-8 md:p-12 space-y-6">
           
+          <div className="flex items-center gap-2">
+            <span className="p-1.5 bg-white/10 text-white rounded-lg backdrop-blur">
+              <GitCompare className="h-4 w-4" />
+            </span>
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-300">ATS Matcher</span>
+          </div>
 
-          <h1 className="mt-6 text-4xl md:text-5xl font-bold tracking-tight">
-            Compare Resume with
-            <br />
-            Job Description
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">
+            Compare Resume with <br className="hidden sm:inline" /> Job Description
           </h1>
 
-          <p className="mt-5 max-w-3xl text-slate-300 leading-7">
-            Select one of your uploaded resumes and compare it
-            against a job description. Receive a detailed
-            compatibility score, missing skills, strengths,
-            weaknesses, and personalized improvement suggestions.
+          <p className="max-w-3xl text-slate-300 text-base md:text-lg leading-relaxed pt-2">
+            Select one of your uploaded resumes and compare it against a job description. 
+            Receive a detailed compatibility score, missing skills, strengths, weaknesses, 
+            and personalized improvement suggestions.
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            <div className="rounded-xl bg-white/10 px-4 py-3 backdrop-blur">
-              <p className="text-xs text-slate-300">
-                Uploaded Resumes
-              </p>
-
-              <p className="text-2xl font-bold">
-                {resumes.length}
-              </p>
+          
+          <div className="pt-6 flex flex-wrap gap-4">
+            <div className="flex items-center gap-3 rounded-xl bg-white/5 border border-white/10 px-5 py-3.5 backdrop-blur min-w-[150px]">
+              <FileText className="h-4 w-4 text-blue-400 shrink-0" />
+              <div>
+                <p className="text-[10px] uppercase font-semibold tracking-wider text-slate-400">Resumes</p>
+                <p className="text-xl font-bold mt-0.5">{resumes.length}</p>
+              </div>
             </div>
 
-            <div className="rounded-xl bg-white/10 px-4 py-3 backdrop-blur">
-              <p className="text-xs text-slate-300">
-                AI Analysis
-              </p>
-
-              <p className="text-2xl font-bold">
-                Instant
-              </p>
+            <div className="flex items-center gap-3 rounded-xl bg-white/5 border border-white/10 px-5 py-3.5 backdrop-blur min-w-[150px]">
+              <Sparkles className="h-4 w-4 text-amber-400 shrink-0" />
+              <div>
+                <p className="text-[10px] uppercase font-semibold tracking-wider text-slate-400">AI Analysis</p>
+                <p className="text-xl font-bold mt-0.5">Instant</p>
+              </div>
             </div>
 
-            <div className="rounded-xl bg-white/10 px-4 py-3 backdrop-blur">
-              <p className="text-xs text-slate-300">
-                Match Report
-              </p>
-
-              <p className="text-2xl font-bold">
-                ATS Ready
-              </p>
+            <div className="flex items-center gap-3 rounded-xl bg-white/5 border border-white/10 px-5 py-3.5 backdrop-blur min-w-[150px]">
+              <ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0" />
+              <div>
+                <p className="text-[10px] uppercase font-semibold tracking-wider text-slate-400">Match Report</p>
+                <p className="text-xl font-bold mt-0.5">ATS Ready</p>
+              </div>
             </div>
           </div>
+
         </div>
       </section>
 
-      {/* Form */}
-      <CompareForm
-  resumes={resumes}
-  jobMatches={jobMatches}
-/>
+      
+      <div className="bg-white rounded-2xl border p-6 md:p-8 shadow-sm">
+        <CompareForm
+          resumes={resumes}
+          jobMatches={jobMatches}
+        />
+      </div>
+      
     </div>
   );
 }

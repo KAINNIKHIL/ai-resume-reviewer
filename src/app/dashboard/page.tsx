@@ -82,25 +82,25 @@ export default async function DashboardPage() {
         <StatCard
           title="Total Resumes"
           value={totalResumes}
-          icon={<FileText className="h-5 w-5 text-blue-500" />}
+          icon={<FileText className="h-4 w-4 text-blue-500" />}
           gradient="hover:border-blue-500/30"
         />
         <StatCard
           title="Average ATS"
           value={`${averageScore}%`}
-          icon={<BarChart3 className="h-5 w-5 text-emerald-500" />}
+          icon={<BarChart3 className="h-4 w-4 text-emerald-500" />}
           gradient="hover:border-emerald-500/30"
         />
         <StatCard
           title="Highest ATS"
           value={`${highestScore}%`}
-          icon={<Award className="h-5 w-5 text-amber-500" />}
+          icon={<Award className="h-4 w-4 text-amber-500" />}
           gradient="hover:border-amber-500/30"
         />
         <StatCard
           title="JD Comparisons"
           value={totalComparisons}
-          icon={<GitCompare className="h-5 w-5 text-indigo-500" />}
+          icon={<GitCompare className="h-4 w-4 text-indigo-500" />}
           gradient="hover:border-indigo-500/30"
         />
       </div>
@@ -112,8 +112,8 @@ export default async function DashboardPage() {
           <div>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-foreground">Recent Resume</h2>
-              <span className="p-2 bg-blue-50 text-blue-600 rounded-xl group-hover:bg-blue-100 transition-colors">
-                <FileText className="h-5 w-5" />
+              <span className="p-1.5 bg-blue-50 text-blue-600 rounded-lg group-hover:bg-blue-100 transition-colors">
+                <FileText className="h-4 w-4" />
               </span>
             </div>
 
@@ -144,7 +144,7 @@ export default async function DashboardPage() {
               className="mt-6 flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors group/link"
             >
               View Resume 
-              <ArrowRight className="h-4 w-4 transition-transform group-hover/link:translate-x-1" />
+              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-1" />
             </Link>
           )}
         </div>
@@ -154,8 +154,8 @@ export default async function DashboardPage() {
           <div>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-foreground">Recent Comparison</h2>
-              <span className="p-2 bg-indigo-50 text-indigo-600 rounded-xl group-hover:bg-indigo-100 transition-colors">
-                <GitCompare className="h-5 w-5" />
+              <span className="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg group-hover:bg-indigo-100 transition-colors">
+                <GitCompare className="h-4 w-4" />
               </span>
             </div>
 
@@ -182,7 +182,7 @@ export default async function DashboardPage() {
               className="mt-6 flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors group/link"
             >
               View Comparison 
-              <ArrowRight className="h-4 w-4 transition-transform group-hover/link:translate-x-1" />
+              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-1" />
             </Link>
           )}
         </div>
@@ -194,17 +194,17 @@ export default async function DashboardPage() {
         <div className="flex flex-wrap gap-4">
           <Link
             href="/dashboard/resumes"
-            className="flex items-center gap-2 rounded-xl bg-gray-900 text-white font-medium px-6 py-3.5 hover:bg-gray-800 shadow-sm transition-all hover:-translate-y-0.5 active:translate-y-0"
+            className="flex items-center gap-2 rounded-xl bg-gray-900 text-white font-medium px-5 py-3 text-sm hover:bg-gray-800 shadow-sm transition-all hover:-translate-y-0.5 active:translate-y-0"
           >
-            <Upload className="h-4 w-4" />
+            <Upload className="h-3.5 w-3.5" />
             Upload Resume
           </Link>
 
           <Link
             href="/dashboard/compare"
-            className="flex items-center gap-2 rounded-xl border bg-white font-medium px-6 py-3.5 hover:bg-gray-50 text-gray-700 shadow-sm transition-all hover:-translate-y-0.5 active:translate-y-0"
+            className="flex items-center gap-2 rounded-xl border bg-white font-medium px-5 py-3 text-sm hover:bg-gray-50 text-gray-700 shadow-sm transition-all hover:-translate-y-0.5 active:translate-y-0"
           >
-            <PlusCircle className="h-4 w-4 text-gray-500" />
+            <PlusCircle className="h-3.5 w-3.5 text-gray-500" />
             Compare JD
           </Link>
         </div>
@@ -223,11 +223,11 @@ interface StatCardProps {
 function StatCard({ title, value, icon, gradient = "" }: StatCardProps) {
   return (
     <div className={`rounded-2xl border bg-card p-6 shadow-sm transition-all ${gradient}`}>
-      <div className="flex items-center justify-between space-y-0 pb-2">
-        <p className="text-sm font-medium text-muted-foreground tracking-wide uppercase">
+      <div className="flex items-center justify-between space-y-0">
+        <p className="text-xs font-semibold text-muted-foreground tracking-wider uppercase">
           {title}
         </p>
-        <div className="rounded-lg bg-gray-50 p-2 border border-gray-100">
+        <div className="rounded-md bg-gray-50 p-1.5 border border-gray-100">
           {icon}
         </div>
       </div>
