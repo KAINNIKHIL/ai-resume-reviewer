@@ -9,6 +9,7 @@ import {
   GitCompare, 
   ArrowRight, 
   Upload, 
+  FilePenLine,
   PlusCircle 
 } from "lucide-react";
 
@@ -78,32 +79,43 @@ export default async function DashboardPage() {
       </div>
 
       {/* Metrics Grid */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard
-          title="Total Resumes"
-          value={totalResumes}
-          icon={<FileText className="h-4 w-4 text-blue-500" />}
-          gradient="hover:border-blue-500/30"
-        />
-        <StatCard
-          title="Average ATS"
-          value={`${averageScore}%`}
-          icon={<BarChart3 className="h-4 w-4 text-emerald-500" />}
-          gradient="hover:border-emerald-500/30"
-        />
-        <StatCard
-          title="Highest ATS"
-          value={`${highestScore}%`}
-          icon={<Award className="h-4 w-4 text-amber-500" />}
-          gradient="hover:border-amber-500/30"
-        />
-        <StatCard
-          title="JD Comparisons"
-          value={totalComparisons}
-          icon={<GitCompare className="h-4 w-4 text-indigo-500" />}
-          gradient="hover:border-indigo-500/30"
-        />
-      </div>
+      <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+  <StatCard
+    title="Total Resumes"
+    value={totalResumes}
+    subtitle="Uploaded resumes"
+    trend="+2 this month"
+    icon={<FileText className="h-5 w-5 text-blue-500" />}
+    gradient="from-blue-500/10 to-blue-100/20 hover:border-blue-300"
+  />
+
+  <StatCard
+    title="Average ATS"
+    value={`${averageScore}%`}
+    subtitle="Across all resumes"
+    trend={averageScore >= 80 ? "Excellent" : "Needs improvement"}
+    icon={<BarChart3 className="h-5 w-5 text-emerald-500" />}
+    gradient="from-emerald-500/10 to-emerald-100/20 hover:border-emerald-300"
+  />
+
+  <StatCard
+    title="Highest ATS"
+    value={`${highestScore}%`}
+    subtitle="Best performing resume"
+    trend="Personal best"
+    icon={<Award className="h-5 w-5 text-amber-500" />}
+    gradient="from-amber-500/10 to-amber-100/20 hover:border-amber-300"
+  />
+
+  <StatCard
+    title="JD Comparisons"
+    value={totalComparisons}
+    subtitle="AI job matches"
+    trend={`${totalComparisons} completed`}
+    icon={<GitCompare className="h-5 w-5 text-indigo-500" />}
+    gradient="from-indigo-500/10 to-indigo-100/20 hover:border-indigo-300"
+  />
+</div>
 
       {/* Main Content Splitted Grid */}
       <div className="grid lg:grid-cols-2 gap-8">
@@ -189,26 +201,77 @@ export default async function DashboardPage() {
       </div>
 
       {/* Quick Actions */}
-      <div className="rounded-2xl border bg-gray-50/50 p-6 md:p-8 shadow-inner">
-        <h2 className="text-xl font-bold mb-6 text-foreground">Quick Actions</h2>
-        <div className="flex flex-wrap gap-4">
-          <Link
-            href="/dashboard/resumes"
-            className="flex items-center gap-2 rounded-xl bg-gray-900 text-white font-medium px-5 py-3 text-sm hover:bg-gray-800 shadow-sm transition-all hover:-translate-y-0.5 active:translate-y-0"
-          >
-            <Upload className="h-3.5 w-3.5" />
-            Upload Resume
-          </Link>
+      <div className="space-y-6">
+  <div>
+    <h2 className="text-2xl font-bold tracking-tight">Quick Actions</h2>
 
-          <Link
-            href="/dashboard/compare"
-            className="flex items-center gap-2 rounded-xl border bg-white font-medium px-5 py-3 text-sm hover:bg-gray-50 text-gray-700 shadow-sm transition-all hover:-translate-y-0.5 active:translate-y-0"
-          >
-            <PlusCircle className="h-3.5 w-3.5 text-gray-500" />
-            Compare JD
-          </Link>
-        </div>
+    <p className="mt-1 text-sm text-zinc-500">
+      Start a new AI workflow in one click.
+    </p>
+  </div>
+
+  <div className="grid gap-5 md:grid-cols-3">
+    <Link
+      href="/dashboard/resumes"
+      className="group rounded-3xl border bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-xl"
+    >
+      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white">
+        <Upload size={24} />
       </div>
+
+      <h3 className="mt-6 text-lg font-bold">Upload Resume</h3>
+
+      <p className="mt-2 text-sm leading-6 text-zinc-500">
+        Upload a new resume and receive an AI-powered ATS analysis.
+      </p>
+
+      <div className="mt-6 flex items-center gap-2 font-medium text-blue-600">
+        Get Started
+        <ArrowRight size={16} className="transition group-hover:translate-x-1" />
+      </div>
+    </Link>
+
+    <Link
+      href="/dashboard/compare"
+      className="group rounded-3xl border bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-purple-200 hover:shadow-xl"
+    >
+      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 text-white">
+        <GitCompare size={30} />
+      </div>
+
+      <h3 className="mt-6 text-lg font-bold">Compare with JD</h3>
+
+      <p className="mt-2 text-sm leading-6 text-zinc-500">
+        Match your resume with any job description and discover missing skills.
+      </p>
+
+      <div className="mt-6 flex items-center gap-2 font-medium text-purple-600">
+        Analyze Match
+        <ArrowRight size={16} className="transition group-hover:translate-x-1" />
+      </div>
+    </Link>
+
+    <Link
+      href="/dashboard/cover-letter"
+      className="group rounded-3xl border bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-xl"
+    >
+      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 text-white">
+        <FilePenLine size={24} />
+      </div>
+
+      <h3 className="mt-6 text-lg font-bold">Generate Cover Letter</h3>
+
+      <p className="mt-2 text-sm leading-6 text-zinc-500">
+        Create a tailored cover letter in seconds using AI.
+      </p>
+
+      <div className="mt-6 flex items-center gap-2 font-medium text-emerald-600">
+        Generate
+        <ArrowRight size={16} className="transition group-hover:translate-x-1" />
+      </div>
+    </Link>
+  </div>
+</div>
     </div>
   );
 }

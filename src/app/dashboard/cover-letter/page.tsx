@@ -35,7 +35,7 @@ export default async function CoverLetterPage() {
 
   return (
    
-    <div className="max-w-5xl mx-auto space-y-12 px-4 py-10 md:px-6">
+    <div className="max-w-7xl mx-auto space-y-16 px-4 py-10 md:px-6">
 
   
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b pb-6">

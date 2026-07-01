@@ -1,7 +1,7 @@
 import { auth } from "../auth";
 import { redirect } from "next/navigation";
-import Sidebar from "@/components/dashboard/sidebar";
 
+import Sidebar from "@/components/dashboard/sidebar";
 
 export default async function DashboardLayout({
   children,
@@ -15,14 +15,16 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="flex min-h-screen">
-      <aside className="w-64 border-r">
-        <Sidebar />
-      </aside>
+    <div className="h-screen bg-background">
 
-      <main className="flex-1 p-6">
+      {/* Fixed Sidebar */}
+      <Sidebar />
+
+      {/* Scrollable Content */}
+      <main className="ml-64 h-screen overflow-y-auto p-8">
         {children}
       </main>
+
     </div>
   );
 }

@@ -94,9 +94,9 @@ export default function ResumeCard({
 
           {/* Resume Details */}
           <div className="flex-1 min-w-0">
-            <h3 className="truncate text-xl font-bold text-zinc-900">
-              {resume.title}
-            </h3>
+            <h3 className="line-clamp-2 break-all text-lg font-bold leading-6 text-zinc-900">
+  {resume.title}
+</h3>
 
             <p className="mt-1 text-sm text-zinc-500">
               Uploaded{" "}

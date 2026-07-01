@@ -10,6 +10,8 @@ import {
   FilePenLine,
 } from "lucide-react";
 
+import LogoutButton from "@/components/auth/logout-button";
+
 const links = [
   {
     href: "/dashboard",
@@ -37,7 +39,7 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="h-screen w-64 border-r border-zinc-800 bg-zinc-950 flex flex-col">
+    <aside className="fixed left-0 top-0 flex h-screen w-64 flex-col border-r border-zinc-800 bg-zinc-950">
       {/* Logo */}
       <div className="p-6 border-b border-zinc-800">
         <h1 className="text-xl font-bold text-white">
@@ -77,17 +79,22 @@ export default function Sidebar() {
       </nav>
 
       {/* Bottom */}
-      <div className="border-t border-zinc-800 p-5">
-        <div className="rounded-xl bg-zinc-900 p-4">
-          <p className="text-sm text-white font-medium">
-            Free Plan
-          </p>
+      {/* Bottom */}
+<div className="border-t border-zinc-800 p-5 space-y-4">
 
-          <p className="text-xs text-zinc-400 mt-1">
-            Upgrade to unlock unlimited AI reviews.
-          </p>
-        </div>
-      </div>
+  <div className="rounded-xl bg-zinc-900 p-4">
+    <p className="text-sm text-white font-medium">
+      Free Plan
+    </p>
+
+    <p className="text-xs text-zinc-400 mt-1">
+      Upgrade to unlock unlimited AI reviews.
+    </p>
+  </div>
+
+  <LogoutButton />
+
+</div>
     </aside>
   );
 }

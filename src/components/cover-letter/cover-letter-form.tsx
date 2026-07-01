@@ -96,8 +96,8 @@ export default function CoverLetterForm({
           </span>
         </div>
 
-        {/* Scrollable container setup so cards stay neat even if the left side text is tall */}
-        <div className="space-y-4 max-h-[520px] overflow-y-auto pr-1">
+   
+        <div className="space-y-4  overflow-y-auto ">
           {resumes.length === 0 ? (
             <div className="rounded-2xl border border-dashed p-10 text-center bg-gray-50/50">
               <p className="font-semibold text-gray-700">
